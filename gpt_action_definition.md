@@ -109,6 +109,17 @@ Retrieve aggregated NYC311 service request metrics filtered by borough, complain
 }
 ```
 
+## Testing & Validation
+Because this is a GPT Action definition, the primary validation is schema conformance and a controlled API smoke test. Recommended steps:
+
+1. **Schema check**: Validate a sample request against the input schema and a sample response against the output schema using a JSON Schema validator in your internal tooling.
+2. **Smoke test (staging only)**: Call the internal governed API wrapper with a known, low-volume query and verify:
+   - Response fields match the output schema.
+   - Only aggregate data is returned (no request-level records or PII).
+   - `data_last_updated` is present and current.
+3. **Rate-limit/audit verification**: Confirm the request is logged and that rate limits are enforced for repeated calls.
+4. **Human-in-the-loop check**: Ensure the action only runs when explicitly invoked by a user request in ChatGPT Enterprise.
+
 ## Governance & Public-Sector Safety Notes
 - **Read-only access**: The action only retrieves aggregated metrics and does not allow writes, updates, or deletions.
 - **No database/SQL access**: The action is backed by a governed internal API wrapper, not direct database access or SQL execution.
